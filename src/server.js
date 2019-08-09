@@ -35,7 +35,7 @@ const init = async () => {
 
   server.route({
     method: 'GET',
-    path: '/deromanize',
+    path: '/deromanize/{arabicNumber}',
     handler: romanizer.deromanize
   });
 };
