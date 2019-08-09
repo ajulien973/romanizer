@@ -1,6 +1,6 @@
-const Hapi = require('@hapi/hapi');
-const Good = require('@hapi/good');
-const romanizer = require('./controllers/romanizer');
+import Hapi from '@hapi/hapi';
+import Good from '@hapi/good';
+import romanizer from './controllers/romanizer';
 
 const consoleLogging = {
   plugin: Good,
