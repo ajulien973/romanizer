@@ -1,5 +1,7 @@
 import Hapi from '@hapi/hapi';
 import Good from '@hapi/good';
+import Vision from '@hapi/vision';
+import Handlebars from 'handlebars';
 import romanizer from './controllers/romanizer';
 
 const consoleLogging = {
@@ -28,16 +30,32 @@ const init = async () => {
     host: 'localhost'
   });
 
-  await server.register([consoleLogging]);
+  await server.register([consoleLogging, Vision]);
 
-  await server.start();
-  console.log('Server running on %ss', server.info.uri);
+  server.views({
+    engines: {
+      html: Handlebars
+    },
+    relativeTo: __dirname,
+    path: 'views'
+  });
 
   server.route({
     method: 'GET',
     path: '/deromanize/{arabicNumber}',
     handler: romanizer.deromanize
   });
+
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: (request, h) => {
+      return h.view('main');
+    }
+  });
+
+  await server.start();
+  console.log('Server running on %ss', server.info.uri);
 };
 
 process.on('unhandledRejection', err => {
