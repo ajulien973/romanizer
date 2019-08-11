@@ -9,6 +9,9 @@ module.exports = {
     if (typeof arabicNumber !== 'number') {
       h.response('not a number');
     }
-    return h.response(convertToRoman(request.params.arabicNumber));
+    return h.response({
+      arabicNumberToConvert: arabicNumber,
+      convertedNumberToRoman: convertToRoman(request.params.arabicNumber),
+    });
   }
 };
