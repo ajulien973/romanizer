@@ -1,6 +1,8 @@
 import Hapi from '@hapi/hapi';
 import Good from '@hapi/good';
 import Vision from '@hapi/vision';
+import Inert from '@hapi/inert';
+import Path from 'path';
 import Handlebars from 'handlebars';
 import romanizer from './controllers/romanizer';
 
@@ -27,10 +29,15 @@ const consoleLogging = {
 const init = async () => {
   const server = Hapi.server({
     port: 3000,
-    host: 'localhost'
+    host: 'localhost',
+    routes: {
+      files: {
+        relativeTo: Path.join(__dirname, '/scripts')
+      }
+    }
   });
 
-  await server.register([consoleLogging, Vision]);
+  await server.register([consoleLogging, Vision, Inert]);
 
   server.views({
     engines: {
@@ -51,6 +58,14 @@ const init = async () => {
     path: '/',
     handler: (request, h) => {
       return h.view('main');
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/fetchConvertToRoman.js',
+    handler: {
+      file: 'fetchConvertToRoman.js'
     }
   });
 

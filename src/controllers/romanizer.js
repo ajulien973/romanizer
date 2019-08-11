@@ -11,7 +11,7 @@ module.exports = {
     }
     return h.response({
       arabicNumberToConvert: arabicNumber,
-      convertedNumberToRoman: convertToRoman(request.params.arabicNumber),
+      convertedNumberToRoman: convertToRoman(request.params.arabicNumber)
     });
   }
 };
