@@ -17,19 +17,37 @@ describe('romanizer', () => {
     });
 
     describe('when an arabic number is given as param', () => {
-      it('should convert it to roman', () => {
+      it('should return a readable stream', () => {
         const request = {
           params: {
             arabicNumber: 1
           }
         };
         const h = {
-          response: a => a
+          event: a => a
         };
-        expect(romanizer.deromanize(request, h)).toStrictEqual({
-          arabicNumberToConvert: 1,
-          convertedNumberToRoman: 'I'
-        });
+        expect(romanizer.deromanize(request, h).readable).toBe(true);
+      });
+
+      it('should implement _read function to push the data to send', () => {
+        const request = {
+          params: {
+            arabicNumber: 1
+          }
+        };
+        const h = {
+          event: a => a
+        };
+
+        // when
+        const returnedReadableEvent = romanizer.deromanize(request, h);
+        returnedReadableEvent.push = jest.fn();
+        returnedReadableEvent._read();
+
+        // then
+        expect(returnedReadableEvent.push).toHaveBeenCalledWith(
+          "{\"arabicNumberToConvert\":1,\"convertedNumberToRoman\":\"I\"}"
+        );
       });
     });
   });

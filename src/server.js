@@ -2,6 +2,7 @@ import Hapi from '@hapi/hapi';
 import Good from '@hapi/good';
 import Vision from '@hapi/vision';
 import Inert from '@hapi/inert';
+import Susie from 'susie';
 import Path from 'path';
 import Handlebars from 'handlebars';
 import romanizer from './controllers/romanizer';
@@ -37,7 +38,7 @@ const init = async () => {
     }
   });
 
-  await server.register([consoleLogging, Vision, Inert]);
+  await server.register([consoleLogging, Vision, Inert, Susie]);
 
   server.views({
     engines: {
