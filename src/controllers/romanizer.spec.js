@@ -26,7 +26,10 @@ describe('romanizer', () => {
         const h = {
           response: a => a
         };
-        expect(romanizer.deromanize(request, h)).toBe('I');
+        expect(romanizer.deromanize(request, h)).toStrictEqual({
+          arabicNumberToConvert: 1,
+          convertedNumberToRoman: 'I'
+        });
       });
     });
   });

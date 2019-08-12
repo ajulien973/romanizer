@@ -7,7 +7,7 @@ module.exports = {
     } = request;
 
     if (typeof arabicNumber !== 'number') {
-      h.response('not a number');
+      return h.response('not a number');
     }
     return h.response({
       arabicNumberToConvert: arabicNumber,
