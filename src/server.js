@@ -1,5 +1,10 @@
 import Hapi from '@hapi/hapi';
 import Good from '@hapi/good';
+import Vision from '@hapi/vision';
+import Inert from '@hapi/inert';
+import Susie from 'susie';
+import Path from 'path';
+import Handlebars from 'handlebars';
 import romanizer from './controllers/romanizer';
 
 const consoleLogging = {
@@ -25,19 +30,48 @@ const consoleLogging = {
 const init = async () => {
   const server = Hapi.server({
     port: 3000,
-    host: 'localhost'
+    host: 'localhost',
+    routes: {
+      files: {
+        relativeTo: Path.join(__dirname, '/scripts')
+      }
+    }
   });
 
-  await server.register([consoleLogging]);
+  await server.register([consoleLogging, Vision, Inert, Susie]);
 
-  await server.start();
-  console.log('Server running on %ss', server.info.uri);
+  server.views({
+    engines: {
+      html: Handlebars
+    },
+    relativeTo: __dirname,
+    path: 'views'
+  });
 
   server.route({
     method: 'GET',
-    path: '/deromanize',
+    path: '/deromanize/{arabicNumber}',
     handler: romanizer.deromanize
   });
+
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: (request, h) => {
+      return h.view('main');
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/fetchConvertToRoman.js',
+    handler: {
+      file: 'fetchConvertToRoman.js'
+    }
+  });
+
+  await server.start();
+  console.log('Server running on %ss', server.info.uri);
 };
 
 process.on('unhandledRejection', err => {
